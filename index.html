@@ -2,34 +2,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Riki & Nafa Wedding</title><!-- Google Fonts (Wedding Style) --><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet"><style>
-body{margin:0;font-family:'Playfair Display',serif;background:#0f0f0f;color:#fff;text-align:center;overflow-x:hidden;}
-section{padding:60px 20px;}
-.fade{animation:fade 1.5s ease;}
-@keyframes fade{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+<title>Riki & Nafa Wedding</title><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet"><style>
+body{margin:0;font-family:'Playfair Display',serif;background:#0b0b0b;color:#fff;text-align:center;overflow-x:hidden;}
+section{padding:80px 20px;}
+
+/* Cinematic Fade */
+.fade{opacity:0;transform:translateY(40px);transition:all 1.2s ease;}
+.fade.show{opacity:1;transform:translateY(0);}
+
+/* Cover */
 .cover{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;}
-.cover::before{content:"";position:absolute;width:100%;height:100%;background:url('https://images.unsplash.com/photo-1520857014576-2c4f4c972b57') center/cover no-repeat;filter:blur(8px) brightness(0.4);z-index:0;}
-.cover *{z-index:1;}
+.cover::before{
+ content:"";
+ position:absolute;
+ width:100%;height:100%;
+ background:url('https://images.unsplash.com/photo-1520857014576-2c4f4c972b57') center/cover no-repeat;
+ filter:blur(10px) brightness(0.3);
+ transform:scale(1.1);
+}
+.cover *{z-index:2;}
+.overlay{position:absolute;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1;}
 
-h1{font-family:'Great Vibes',cursive;font-size:48px;letter-spacing:1px;}
-h2,h3{font-weight:400;}
+h1{font-family:'Great Vibes',cursive;font-size:56px;letter-spacing:2px;text-shadow:0 0 20px rgba(255,255,255,0.3);}
+h2{font-weight:400;letter-spacing:2px;}
 
-.btn{padding:12px 24px;background:#fff;color:#000;border:none;border-radius:25px;cursor:pointer;margin-top:20px;transition:0.3s;}
-.btn:hover{transform:scale(1.05);}
-.card{border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px;margin:20px auto;max-width:400px;background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);}
-#musicBtn{position:fixed;bottom:20px;right:20px;background:#fff;color:#000;border-radius:50%;padding:12px;cursor:pointer;box-shadow:0 0 10px rgba(255,255,255,0.5);}
-input,textarea{width:90%;padding:10px;margin:5px;border-radius:8px;border:none;}
+.btn{
+ padding:14px 28px;
+ background:rgba(255,255,255,0.9);
+ color:#000;
+ border:none;
+ border-radius:30px;
+ cursor:pointer;
+ margin-top:30px;
+ transition:0.4s;
+ backdrop-filter:blur(10px);
+}
+.btn:hover{transform:scale(1.08);box-shadow:0 0 20px rgba(255,255,255,0.4);}
+
+.card{
+ border-radius:20px;
+ padding:30px;
+ margin:30px auto;
+ max-width:420px;
+ background:rgba(255,255,255,0.05);
+ backdrop-filter:blur(15px);
+ box-shadow:0 10px 40px rgba(0,0,0,0.6);
+}
+
+#musicBtn{
+ position:fixed;
+ bottom:20px;
+ right:20px;
+ background:#fff;
+ color:#000;
+ border-radius:50%;
+ padding:14px;
+ cursor:pointer;
+ box-shadow:0 0 15px rgba(255,255,255,0.6);
+}
+
+input,textarea{
+ width:90%;padding:12px;margin:8px;border-radius:10px;border:none;
+}
 </style></head>
 <body><audio id="music" loop>
 <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-</audio><div id="musicBtn" onclick="toggleMusic()">🎵</div><section class="cover" id="cover">
-<h2 class="fade">Undangan Pernikahan</h2>
+</audio><div id="musicBtn" onclick="toggleMusic()">🎵</div><section class="cover">
+<div class="overlay"></div>
+<h2 class="fade">The Wedding Of</h2>
 <h1 class="fade">Riki & Nafa</h1>
 <p id="guestName" class="fade"></p>
 <button class="btn fade" onclick="openInvite()">Buka Undangan</button>
 </section><section id="content" style="display:none;"><div class="fade">
 <h2>Save The Date</h2>
-<h1>10 - 12 April 2026</h1>
+<h1>10 – 12 April 2026</h1>
 <h3 id="countdown"></h3>
 </div><div class="card fade">
 <h3>Akad Nikah</h3>
@@ -55,16 +101,20 @@ input,textarea{width:90%;padding:10px;margin:5px;border-radius:8px;border:none;}
 <p>DANA (Nafa): 085701076701</p>
 </section></section><script>
 function openInvite(){
- document.getElementById('cover').style.display='none';
+ document.querySelector('.cover').style.display='none';
  document.getElementById('content').style.display='block';
+ document.getElementById('music').volume=0;
  document.getElementById('music').play();
+ let vol=0;
+ let fade=setInterval(()=>{ if(vol<1){vol+=0.05;document.getElementById('music').volume=vol;} else clearInterval(fade); },200);
 }
 
 function toggleMusic(){
- let music=document.getElementById('music');
- if(music.paused){music.play();}else{music.pause();}
+ let m=document.getElementById('music');
+ m.paused?m.play():m.pause();
 }
 
+// Countdown
 let eventDate=new Date("April 12, 2026 07:00:00").getTime();
 setInterval(()=>{
  let now=new Date().getTime();
@@ -75,8 +125,18 @@ setInterval(()=>{
  document.getElementById("countdown").innerHTML=`${d} hari ${h} jam ${m} menit`;
 },1000);
 
+// Guest Name
 const params=new URLSearchParams(window.location.search);
 document.getElementById('guestName').innerText=params.get('to')?`Kepada Yth: ${params.get('to')}`:"";
+
+// Scroll Animation
+const faders=document.querySelectorAll('.fade');
+const appear=new IntersectionObserver(entries=>{
+ entries.forEach(entry=>{
+  if(entry.isIntersecting){entry.target.classList.add('show');}
+ });
+});
+faders.forEach(el=>appear.observe(el));
 
 function sendWish(){
  let name=document.getElementById('name').value;
